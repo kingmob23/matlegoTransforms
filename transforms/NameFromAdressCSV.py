@@ -34,4 +34,4 @@ class NameFromAdressCSV(DiscoverableTransform):
 
 
 if __name__ == "__main__":
-    print(NameFromAdressCSV.get_names("0xd90e2f925da726b50c4ed8d0fb90ad053324f31b"))
+    print(NameFromAdressCSV.get_names('0xd90e2f925da726b50c4ed8d0fb90ad053324f31b'))
