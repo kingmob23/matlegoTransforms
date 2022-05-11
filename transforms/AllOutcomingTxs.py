@@ -52,15 +52,19 @@ class AllOutcomingTxs(DiscoverableTransform):
 
     @staticmethod
     def get_names(search_adress):
-        matching_names = []
+        matching_name = ''
         with open("adress_to_names.csv") as f:
             for ln in f.readlines():
                 adress, name = ln.split(",", 1)
                 if adress.strip().lower() == search_adress.strip():
-                    matching_names.append(name.strip())
-        return matching_names
+                    matching_name = name.strip()
+        return matching_name
 
 
 if __name__ == "__main__":
     for i in AllOutcomingTxs.get_address_transactions('0xb3065fE2125C413E973829108F23E872e1DB9A6b'):
-        print(i)
+        name = AllOutcomingTxs.get_names(i)
+        if name:
+            print(name)
+        else:
+            print(i)
