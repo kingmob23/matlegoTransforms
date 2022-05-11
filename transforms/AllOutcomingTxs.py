@@ -30,7 +30,7 @@ class AllOutcomingTxs(DiscoverableTransform):
 
     @staticmethod
     def get_address_transactions(raw_address):
-        api_key = '9CA95D75FTTENE2CDY24J6WXXC1IZT8W4N'
+        api_key = ''
         address = raw_address.lower()
 
         response_API = requests.get(
