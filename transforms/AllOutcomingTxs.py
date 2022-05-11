@@ -1,4 +1,4 @@
-from maltego_trx.entities import Person
+from maltego_trx.entities import Person, Company
 from maltego_trx.maltego import UIM_PARTIAL
 from maltego_trx.transform import DiscoverableTransform
 import requests
@@ -18,7 +18,11 @@ class AllOutcomingTxs(DiscoverableTransform):
             txs_from_x = cls.get_address_transactions(address)
             if txs_from_x:
                 for tx in txs_from_x:
-                    response.addEntity(Person, tx)
+                    name = cls.get_names(tx)
+                    if name:
+                        response.addEntity(Company, name)
+                    else:
+                        response.addEntity(Person, tx)
             else:
                 response.addUIMessage('probably bad address')
         except IOError:
@@ -26,7 +30,7 @@ class AllOutcomingTxs(DiscoverableTransform):
 
     @staticmethod
     def get_address_transactions(raw_address):
-        api_key = ''
+        api_key = '9CA95D75FTTENE2CDY24J6WXXC1IZT8W4N'
         address = raw_address.lower()
 
         response_API = requests.get(
@@ -46,6 +50,17 @@ class AllOutcomingTxs(DiscoverableTransform):
 
         return txs_from_x
 
+    @staticmethod
+    def get_names(search_adress):
+        matching_names = []
+        with open("adress_to_names.csv") as f:
+            for ln in f.readlines():
+                adress, name = ln.split(",", 1)
+                if adress.strip().lower() == search_adress.strip():
+                    matching_names.append(name.strip())
+        return matching_names
+
 
 if __name__ == "__main__":
-    print(AllOutcomingTxs.get_address_transactions('0xd90e2f925da726b50c4ed8d0fb90ad053324f31b'))
+    for i in AllOutcomingTxs.get_address_transactions('0xb3065fE2125C413E973829108F23E872e1DB9A6b'):
+        print(i)
