@@ -22,7 +22,7 @@ class AllOutcomingTxs(DiscoverableTransform):
                     if name:
                         response.addEntity(Company, name)
                     else:
-                        response.addEntity(Person, tx)
+                        response.addEntity(Person, tx[0], tx[1], tx[2])
             else:
                 response.addUIMessage('probably bad address')
         except IOError:
