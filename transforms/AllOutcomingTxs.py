@@ -44,7 +44,7 @@ class AllOutcomingTxs(DiscoverableTransform):
         txs_to_x = []
         for i in result:
             if i['from'] == address:
-                txs_from_x.append(i['to'])
+                txs_from_x.append([i['to'], i['hash'], i['timeStamp']])
             if i['to'] == address:
                 txs_to_x.append(i['from'])
 
@@ -56,7 +56,7 @@ class AllOutcomingTxs(DiscoverableTransform):
         with open("adress_to_names.csv") as f:
             for ln in f.readlines():
                 adress, name = ln.split(",", 1)
-                if adress.strip().lower() == search_adress.strip():
+                if adress.strip().lower() == search_adress.strip().lower():
                     matching_name = name.strip()
         return matching_name
 
