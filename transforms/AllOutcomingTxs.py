@@ -24,7 +24,7 @@ class AllOutcomingTxs(DiscoverableTransform):
                         response.addEntity(Company, name)
                     else:
                         entity = response.addEntity(Person, tx[0])
-                        date = datetime.fromtimestamp(tx[1])
+                        date = datetime.fromtimestamp(int(tx[1]))
                         entity.addProperty(
                             'time_stamp',
                             displayName='time stamp',
