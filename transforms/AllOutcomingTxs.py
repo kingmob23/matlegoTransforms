@@ -62,7 +62,7 @@ class AllOutcomingTxs(DiscoverableTransform):
 
 
 if __name__ == "__main__":
-    for i in AllOutcomingTxs.get_address_transactions('0xb3065fE2125C413E973829108F23E872e1DB9A6b'):
+    for i in AllOutcomingTxs.get_address_transactions('0x7e46480d8e28c1d6c55be1b782084dd2c902f99f'):
         name = AllOutcomingTxs.get_names(i)
         if name:
             print(name)
