@@ -18,7 +18,7 @@ class AllOutcomingTxs(DiscoverableTransform):
             txs_from_x = cls.get_address_transactions(address)
             if txs_from_x:
                 for tx in txs_from_x:
-                    name = cls.get_names(tx)
+                    name = cls.get_names(tx[0])
                     if name:
                         response.addEntity(Company, name)
                     else:
