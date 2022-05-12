@@ -3,6 +3,7 @@ from maltego_trx.maltego import UIM_PARTIAL
 from maltego_trx.transform import DiscoverableTransform
 import requests
 import json
+from datetime import datetime
 
 
 class AllOutcomingTxs(DiscoverableTransform):
@@ -23,10 +24,16 @@ class AllOutcomingTxs(DiscoverableTransform):
                         response.addEntity(Company, name)
                     else:
                         entity = response.addEntity(Person, tx[0])
+                        date = datetime.fromtimestamp(tx[1])
                         entity.addProperty(
                             'time_stamp',
                             displayName='time stamp',
-                            value=f'{tx[1]}'
+                            value=f'{date}'
+                        )
+                        entity.addProperty(
+                            'hash',
+                            displayName='hash',
+                            value=f'{tx[2]}'
                         )
             else:
                 response.addUIMessage('probably bad address')
