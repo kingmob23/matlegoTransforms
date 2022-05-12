@@ -18,11 +18,16 @@ class AllOutcomingTxs(DiscoverableTransform):
             txs_from_x = cls.get_address_transactions(address)
             if txs_from_x:
                 for tx in txs_from_x:
-                    name = cls.get_names(tx)
+                    name = cls.get_names(tx[0])
                     if name:
                         response.addEntity(Company, name)
                     else:
-                        response.addEntity(Person, tx)
+                        entity = response.addEntity(Person, tx[0])
+                        entity.addProperty(
+                            'time_stamp',
+                            displayName='time stamp',
+                            value=f'{tx[1]}'
+                        )
             else:
                 response.addUIMessage('probably bad address')
         except IOError:
@@ -44,7 +49,7 @@ class AllOutcomingTxs(DiscoverableTransform):
         txs_to_x = []
         for i in result:
             if i['from'] == address:
-                txs_from_x.append(i['to'])
+                txs_from_x.append([i['to'], i['timeStamp'], i['hash']])
             if i['to'] == address:
                 txs_to_x.append(i['from'])
 
