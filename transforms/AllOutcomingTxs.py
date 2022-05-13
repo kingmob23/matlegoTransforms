@@ -35,6 +35,7 @@ class AllOutcomingTxs(DiscoverableTransform):
                             displayName='hash',
                             value=f'{tx[2]}'
                         )
+                        entity.setLinkColor('blue')
             else:
                 response.addUIMessage('probably bad address')
         except IOError:
