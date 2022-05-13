@@ -21,16 +21,17 @@ class AllOutcomingTxs(DiscoverableTransform):
                     response.addEntity(Company, name)
                 else:
                     entity = response.addEntity(Person, tx)
+                    counter = 1
                     for i in txs[tx]:
                         date = datetime.fromtimestamp(int(i[0]))
                         entity.addProperty(
-                            'time',
-                            displayName='time',
+                            'time' + str(counter),
+                            displayName='time' + str(counter),
                             value=f'{date}'
                         )
                         entity.addProperty(
-                            'hash',
-                            displayName='hash',
+                            'hash' + str(counter),
+                            displayName='hash' + str(counter),
                             value=f'{i[1]}'
                         )
                     entity.setLinkColor(color)
