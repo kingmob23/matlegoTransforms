@@ -16,22 +16,23 @@ class AllOutcomingTxs(DiscoverableTransform):
 
         def add_txs(txs, color):
             for tx in txs:
-                name = cls.get_names(tx[0])
+                name = cls.get_names(tx)
                 if name:
                     response.addEntity(Company, name)
                 else:
-                    entity = response.addEntity(Person, tx[0])
-                    date = datetime.fromtimestamp(int(tx[1]))
-                    entity.addProperty(
-                        'time',
-                        displayName='time',
-                        value=f'{date}'
-                    )
-                    entity.addProperty(
-                        'hash',
-                        displayName='hash',
-                        value=f'{tx[2]}'
-                    )
+                    entity = response.addEntity(Person, tx)
+                    for i in txs[tx]:
+                        date = datetime.fromtimestamp(int(i[0]))
+                        entity.addProperty(
+                            'time',
+                            displayName='time',
+                            value=f'{date}'
+                        )
+                        entity.addProperty(
+                            'hash',
+                            displayName='hash',
+                            value=f'{i[1]}'
+                        )
                     entity.setLinkColor(color)
                     entity.setLinkThickness(3)
 
@@ -54,13 +55,21 @@ class AllOutcomingTxs(DiscoverableTransform):
         parse_json = json.loads(data)
         result = parse_json['result']
 
-        txs_from_x = []
-        txs_to_x = []
+        txs_from_x = {}
+        txs_to_x = {}
         for i in result:
             if i['from'] == address:
-                txs_from_x.append([i['to'], i['timeStamp'], i['hash']])
+                if i['to'] in txs_from_x:
+                    txs_from_x[i['to']].append([i['timeStamp'], i['hash']])
+                else:
+                    txs_from_x[i['to']] = [i['timeStamp'], i['hash']]
+
             if i['to'] == address:
-                txs_to_x.append([i['from'], i['timeStamp'], i['hash']])
+                if i['from'] in txs_to_x:
+                    txs_to_x[i['from']].append([i['timeStamp'], i['hash']])
+                else:
+                    txs_to_x[i['from']] = [i['timeStamp'], i['hash']]
+
 
         return txs_from_x, txs_to_x
 
