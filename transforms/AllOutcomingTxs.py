@@ -13,34 +13,34 @@ class AllOutcomingTxs(DiscoverableTransform):
 
     @classmethod
     def create_entities(cls, request, response):
-        address = request.Value
 
-        try:
-            txs_from_x = cls.get_address_transactions(address)
-            if txs_from_x:
-                for tx in txs_from_x:
-                    name = cls.get_names(tx[0])
-                    if name:
-                        response.addEntity(Company, name)
-                    else:
-                        entity = response.addEntity(Person, tx[0])
-                        date = datetime.fromtimestamp(int(tx[1]))
-                        entity.addProperty(
-                            'time_stamp',
-                            displayName='time stamp',
-                            value=f'{date}'
-                        )
-                        entity.addProperty(
-                            'hash',
-                            displayName='hash',
-                            value=f'{tx[2]}'
-                        )
-                        entity.setLinkColor('#318a86')
-                        entity.setLinkThickness(3)
-            else:
-                response.addUIMessage('probably bad address')
-        except IOError:
-            response.addUIMessage("An error occurred reading the CSV file.", messageType=UIM_PARTIAL)
+        def add_txs(txs, color):
+            for tx in txs:
+                name = cls.get_names(tx[0])
+                if name:
+                    response.addEntity(Company, name)
+                else:
+                    entity = response.addEntity(Person, tx[0])
+                    date = datetime.fromtimestamp(int(tx[1]))
+                    entity.addProperty(
+                        'time',
+                        displayName='time',
+                        value=f'{date}'
+                    )
+                    entity.addProperty(
+                        'hash',
+                        displayName='hash',
+                        value=f'{tx[2]}'
+                    )
+                    entity.setLinkColor(color)
+                    entity.setLinkThickness(3)
+
+        address = request.Value
+        txs_from_x, txs_to_x = cls.get_address_transactions(address)
+        if txs_from_x:
+            add_txs(txs_from_x, '#318a86')
+        if txs_to_x:
+            add_txs(txs_to_x, '#ab2424')
 
     @staticmethod
     def get_address_transactions(raw_address):
@@ -60,9 +60,9 @@ class AllOutcomingTxs(DiscoverableTransform):
             if i['from'] == address:
                 txs_from_x.append([i['to'], i['timeStamp'], i['hash']])
             if i['to'] == address:
-                txs_to_x.append(i['from'])
+                txs_to_x.append([i['from'], i['timeStamp'], i['hash']])
 
-        return txs_from_x
+        return txs_from_x, txs_to_x
 
     @staticmethod
     def get_names(search_adress):
