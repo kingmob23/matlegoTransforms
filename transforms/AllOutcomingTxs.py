@@ -62,13 +62,13 @@ class AllOutcomingTxs(DiscoverableTransform):
                 if i['to'] in txs_from_x:
                     txs_from_x[i['to']].append([i['timeStamp'], i['hash']])
                 else:
-                    txs_from_x[i['to']] = [i['timeStamp'], i['hash']]
+                    txs_from_x[i['to']] = [[i['timeStamp'], i['hash']]]
 
             if i['to'] == address:
                 if i['from'] in txs_to_x:
                     txs_to_x[i['from']].append([i['timeStamp'], i['hash']])
                 else:
-                    txs_to_x[i['from']] = [i['timeStamp'], i['hash']]
+                    txs_to_x[i['from']] = [[i['timeStamp'], i['hash']]]
 
 
         return txs_from_x, txs_to_x
