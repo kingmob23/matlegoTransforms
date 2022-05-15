@@ -4,6 +4,7 @@ from maltego_trx.transform import DiscoverableTransform
 import requests
 import json
 from datetime import datetime
+from bs4 import BeautifulSoup
 
 
 class AllOutcomingTxs(DiscoverableTransform):
@@ -16,7 +17,7 @@ class AllOutcomingTxs(DiscoverableTransform):
 
         def add_txs(txs, color):
             for tx in txs:
-                name = cls.get_names(tx)
+                name = cls.get_names(tx.lower())
                 if name:
                     response.addEntity(Company, name)
                 else:
@@ -72,24 +73,34 @@ class AllOutcomingTxs(DiscoverableTransform):
                 else:
                     txs_to_x[i['from']] = [[i['timeStamp'], i['hash']]]
 
-
         return txs_from_x, txs_to_x
 
     @staticmethod
     def get_names(search_adress):
-        matching_name = ''
-        with open("adress_to_names.csv") as f:
-            for ln in f.readlines():
-                adress, name = ln.split(",", 1)
-                if adress.strip().lower() == search_adress.strip().lower():
-                    matching_name = name.strip()
-        return matching_name
+        headers = {
+            'Host': 'etherscan.io',
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0'
+        }
+
+        s = requests.session()
+        response = s.get(f'https://etherscan.io/address/{search_adress}', headers=headers)
+        data = response.text
+
+        soup = BeautifulSoup(data, 'html.parser')
+        info = list(map(str.strip, soup.find('title').string.strip().split('|')))
+
+        if len(info) == 3:
+            received_address = info[1].split(' ')[1].lower()
+            if search_adress == received_address:
+                name = info[0]
+                return name
 
 
 if __name__ == "__main__":
     for i in AllOutcomingTxs.get_address_transactions('0x7e46480d8e28c1d6c55be1b782084dd2c902f99f'):
-        name = AllOutcomingTxs.get_names(i)
-        if name:
-            print(name)
-        else:
-            print(i)
+        for tx in i:
+            name = AllOutcomingTxs.get_names(tx.lower())
+            if name:
+                print(name)
+            else:
+                print(tx)
