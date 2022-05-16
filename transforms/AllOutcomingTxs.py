@@ -15,11 +15,34 @@ class AllOutcomingTxs(DiscoverableTransform):
     @classmethod
     def create_entities(cls, request, response):
 
+        def add_time_n_hash(some_entity, properties_list):
+            counter = 0
+            for i in properties_list:
+                date = datetime.fromtimestamp(int(i[0]))
+                some_entity.addProperty(
+                    'time' + str(counter),
+                    displayName='time' + str(counter),
+                    value=f'{date}'
+                )
+                some_entity.addProperty(
+                    'hash' + str(counter),
+                    displayName='hash' + str(counter),
+                    value=f'{i[1]}'
+                )
+                counter += 1
+
         def add_txs(txs, color):
             for tx in txs:
                 name = cls.get_names(tx.lower())
                 if name:
-                    response.addEntity(Company, name)
+                    entity = response.addEntity(Company, name)
+                    entity.addProperty(
+                        'address',
+                        displayName='address',
+                        value=f'{tx}'
+                    )
+                    add_time_n_hash(entity, txs[tx])
+
                 else:
                     entity = response.addEntity(Person, tx)
                     counter = 0
