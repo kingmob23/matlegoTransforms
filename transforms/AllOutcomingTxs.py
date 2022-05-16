@@ -93,11 +93,10 @@ class AllOutcomingTxs(DiscoverableTransform):
         with open("adress_to_names.csv") as f:
             for ln in f.readlines():
                 print(ln)
-                if ln is not None:
-                    adress, name = ln.split(",")[0]
-                    if adress.strip().lower() == search_adress:
-                        matching_name = name.strip()
-                        return matching_name
+                adress, name = ln.split(",", 1)
+                if adress.strip().lower() == search_adress:
+                    matching_name = name.strip()
+                    return matching_name
 
         headers = {
             'Host': 'etherscan.io',
@@ -118,7 +117,8 @@ class AllOutcomingTxs(DiscoverableTransform):
 
                 with open('adress_to_names.csv', 'a') as db:
                     writer = csv.writer(db)
-                    line = [search_adress, name]
+                    eman = ' ' + name
+                    line = [search_adress, eman]
                     writer.writerow(line)
 
                 return name
