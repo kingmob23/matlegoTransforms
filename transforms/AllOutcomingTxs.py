@@ -5,6 +5,7 @@ import requests
 import json
 from datetime import datetime
 from bs4 import BeautifulSoup
+import csv
 
 
 class AllOutcomingTxs(DiscoverableTransform):
@@ -33,7 +34,7 @@ class AllOutcomingTxs(DiscoverableTransform):
 
         def add_txs(txs, color):
             for tx in txs:
-                name = cls.get_names(tx.lower())
+                name = cls.get_names(tx.strip().lower())
                 if name:
                     entity = response.addEntity(Company, name)
                     entity.addProperty(
@@ -88,6 +89,14 @@ class AllOutcomingTxs(DiscoverableTransform):
 
     @staticmethod
     def get_names(search_adress):
+        matching_name = ''
+        with open("adress_to_names.csv") as f:
+            for ln in f.readlines():
+                adress, name = ln.split(",", 1)
+                if adress.strip().lower() == search_adress:
+                    matching_name = name.strip()
+                    return matching_name
+
         headers = {
             'Host': 'etherscan.io',
             'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0'
@@ -104,6 +113,12 @@ class AllOutcomingTxs(DiscoverableTransform):
             received_address = info[1].split(' ')[1].lower()
             if search_adress == received_address:
                 name = info[0]
+
+                with open('adress_to_names.csv', 'a') as db:
+                    writer = csv.writer(db)
+                    line = [search_adress, name]
+                    writer.writerow(line)
+
                 return name
 
 
