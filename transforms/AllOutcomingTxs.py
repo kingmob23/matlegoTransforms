@@ -89,13 +89,12 @@ class AllOutcomingTxs(DiscoverableTransform):
 
     @staticmethod
     def get_names(search_adress):
-        # matching_name = ''
-        # with open("adress_to_names.csv") as f:
-        #     for ln in f.readlines():
-        #         adress, name = ln.split(",", 1)
-        #         if adress.strip().lower() == search_adress:
-        #             matching_name = name.strip()
-        #             return matching_name
+        with open("adress_to_names.csv") as f:
+            for ln in f.readlines():
+                adress, nname = ln.split(",")
+                if adress.strip().lower() == search_adress:
+                    matching_name = nname.strip()
+                    return matching_name
 
         headers = {
             'Host': 'etherscan.io',
