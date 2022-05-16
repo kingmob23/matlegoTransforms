@@ -35,6 +35,7 @@ class AllOutcomingTxs(DiscoverableTransform):
         def add_txs(txs, color):
             for tx in txs:
                 name = cls.get_names(tx.strip().lower())
+                print(name)
                 if name:
                     entity = response.addEntity(Company, name)
                     entity.addProperty(
@@ -92,7 +93,6 @@ class AllOutcomingTxs(DiscoverableTransform):
         matching_name = ''
         with open("adress_to_names.csv") as f:
             for ln in f.readlines():
-                print(ln)
                 adress, name = ln.split(",", 1)
                 if adress.strip().lower() == search_adress:
                     matching_name = name.strip()
