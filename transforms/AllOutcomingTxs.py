@@ -35,7 +35,6 @@ class AllOutcomingTxs(DiscoverableTransform):
         def add_txs(txs, color):
             for tx in txs:
                 name = cls.get_names(tx.strip().lower())
-                print(name)
                 if name:
                     entity = response.addEntity(Company, name)
                     entity.addProperty(
