@@ -90,38 +90,38 @@ class AllOutcomingTxs(DiscoverableTransform):
 
     @staticmethod
     def get_names(search_adress):
-        matching_name = ''
-        with open("adress_to_names.csv") as f:
-            for ln in f.readlines():
-                adress, name = ln.split(",", 1)
-                if adress.strip().lower() == search_adress:
-                    matching_name = name.strip()
-                    return matching_name
+        # matching_name = ''
+        # with open("adress_to_names.csv") as f:
+        #     for ln in f.readlines():
+        #         adress, name = ln.split(",", 1)
+        #         if adress.strip().lower() == search_adress:
+        #             matching_name = name.strip()
+        #             return matching_name
 
-        # headers = {
-        #     'Host': 'etherscan.io',
-        #     'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0'
-        # }
-        #
-        # s = requests.session()
-        # response = s.get(f'https://etherscan.io/address/{search_adress}', headers=headers)
-        # data = response.text
-        #
-        # soup = BeautifulSoup(data, 'html.parser')
-        # info = list(map(str.strip, soup.find('title').string.strip().split('|')))
-        #
-        # if len(info) == 3:
-        #     received_address = info[1].split(' ')[1].lower()
-        #     if search_adress == received_address:
-        #         name = info[0]
-        #
-        #         with open('adress_to_names.csv', 'a') as db:
-        #             writer = csv.writer(db)
-        #             eman = ' ' + name
-        #             line = [search_adress, eman]
-        #             writer.writerow(line)
-        #
-        #         return name
+        headers = {
+            'Host': 'etherscan.io',
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64; rv:98.0) Gecko/20100101 Firefox/98.0'
+        }
+
+        s = requests.session()
+        response = s.get(f'https://etherscan.io/address/{search_adress}', headers=headers)
+        data = response.text
+
+        soup = BeautifulSoup(data, 'html.parser')
+        info = list(map(str.strip, soup.find('title').string.strip().split('|')))
+
+        if len(info) == 3:
+            received_address = info[1].split(' ')[1].lower()
+            if search_adress == received_address:
+                name = info[0]
+
+                with open('adress_to_names.csv', 'a') as db:
+                    writer = csv.writer(db)
+                    eman = ' ' + name
+                    line = [search_adress, eman]
+                    writer.writerow(line)
+
+                return name
 
 
 if __name__ == "__main__":
