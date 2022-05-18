@@ -66,9 +66,9 @@ class AllOutcomingTxs(DiscoverableTransform):
         ERC20_txs_from_x, ERC20_txs_to_x = cls.get_address_transactions(address, link_ERC20)
 
         if normal_txs_from_x:
-            add_txs(normal_txs_from_x, '#318a86', 3)
+            add_txs(normal_txs_from_x, '#318a86', 0)
         if normal_txs_to_x:
-            add_txs(normal_txs_to_x, '#ab2424', 3)
+            add_txs(normal_txs_to_x, '#ab2424', 0)
 
         if internal_txs_of_x:
             pass
