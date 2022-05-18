@@ -73,10 +73,10 @@ class AllOutcomingTxs(DiscoverableTransform):
         # if internal_txs_of_x:
         #     pass
 
-        if ERC20_txs_from_x:
-            add_txs(ERC20_txs_from_x, '#f51c24', 1)
-        if ERC20_txs_to_x:
-            add_txs(ERC20_txs_to_x, '#00a2e8', 1)
+        # if ERC20_txs_from_x:
+        #     add_txs(ERC20_txs_from_x, '#f51c24', 1)
+        # if ERC20_txs_to_x:
+        #     add_txs(ERC20_txs_to_x, '#00a2e8', 1)
 
 
 
