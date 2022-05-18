@@ -66,9 +66,9 @@ class AllOutcomingTxs(DiscoverableTransform):
         ERC20_txs_from_x, ERC20_txs_to_x = cls.get_address_transactions(address, link_ERC20)
 
         if normal_txs_from_x:
-            add_txs(normal_txs_from_x, '#318a86', 1)
+            add_txs(normal_txs_from_x, '#318a86', 3)
         if normal_txs_to_x:
-            add_txs(normal_txs_to_x, '#ab2424', 1)
+            add_txs(normal_txs_to_x, '#ab2424', 3)
 
         if internal_txs_of_x:
             pass
@@ -148,4 +148,20 @@ class AllOutcomingTxs(DiscoverableTransform):
 
 
 if __name__ == "__main__":
-    AllOutcomingTxs.get_address_transactions('0x259838b05d61717e37fc7b6bf0758d25644ee930', 'https://api.etherscan.io/api?module=account&action=tokentx&address=0x259838b05d61717e37fc7b6bf0758d25644ee930&page=all&offset=100&startblock=0&endblock=27025780&sort=asc&apikey=')
+    address = '0xb3065fE2125C413E973829108F23E872e1DB9A6b'
+    api_key = '9CA95D75FTTENE2CDY24J6WXXC1IZT8W4N'
+
+    link_normal_txs = f'https://api.etherscan.io/api?module=account&action=tokentx&address={address}' \
+                      f'&page=all&offset=100&startblock=0&endblock=27025780&sort=asc&apikey='
+    print(address + api_key)
+    normal_txs_from_x, normal_txs_to_x = AllOutcomingTxs.get_address_transactions(address, link_normal_txs + api_key)
+
+    link_ERC20 = f'https://api.etherscan.io/api?module=account&action=tokentx&address={address}' \
+                 f'&page=all&offset=100&startblock=0&endblock=27025780&sort=asc&apikey='
+    print(address + api_key)
+    ERC20_txs_from_x, ERC20_txs_to_x = AllOutcomingTxs.get_address_transactions(address, link_ERC20 + api_key)
+
+    print(normal_txs_from_x)
+    print(normal_txs_to_x)
+    print(ERC20_txs_from_x)
+    print(ERC20_txs_to_x)
