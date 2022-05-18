@@ -74,7 +74,6 @@ class AllOutcomingTxs(DiscoverableTransform):
         normal_txs_from_x = {}
         normal_txs_to_x = {}
         for i in result:
-            print(i)
             if i['from'] == address:
                 if i['to'] in normal_txs_from_x:
                     normal_txs_from_x[i['to']].append([i['timeStamp'], i['hash']])
