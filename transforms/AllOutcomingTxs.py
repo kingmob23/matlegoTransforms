@@ -10,7 +10,7 @@ import csv
 
 class AllOutcomingTxs(DiscoverableTransform):
     """
-    Lookup the all outcoming txs from address.
+    Lookup all outcoming txs from address.
     """
 
     @classmethod
@@ -52,40 +52,41 @@ class AllOutcomingTxs(DiscoverableTransform):
                     entity.setLinkThickness(3)
 
         address = request.Value
-        txs_from_x, txs_to_x = cls.get_address_transactions(address)
-        if txs_from_x:
-            add_txs(txs_from_x, '#318a86')
-        if txs_to_x:
-            add_txs(txs_to_x, '#ab2424')
+        link_normal_txs = 'https://api.etherscan.io/api?module=account&action=tokentx&address={address}&page=all&offset=100&startblock=0&endblock=27025780&sort=asc&apikey='
+        normal_txs_from_x, normal_txs_to_x = cls.get_address_transactions(address, link_normal_txs)
+
+        if normal_txs_from_x:
+            add_txs(normal_txs_from_x, '#318a86')
+        if normal_txs_to_x:
+            add_txs(normal_txs_to_x, '#ab2424')
 
     @staticmethod
-    def get_address_transactions(raw_address):
+    def get_address_transactions(raw_address, link):
         api_key = ''
         address = raw_address.lower()
 
-        response_API = requests.get(
-            f'https://api.etherscan.io/api?module=account&action=tokentx&address={address}&page=all&offset=100&startblock=0&endblock=27025780&sort=asc&apikey={api_key}')
+        response_API = requests.get(link + api_key)
 
         data = response_API.text
         parse_json = json.loads(data)
         result = parse_json['result']
 
-        txs_from_x = {}
-        txs_to_x = {}
+        normal_txs_from_x = {}
+        normal_txs_to_x = {}
         for i in result:
             if i['from'] == address:
-                if i['to'] in txs_from_x:
-                    txs_from_x[i['to']].append([i['timeStamp'], i['hash']])
+                if i['to'] in normal_txs_from_x:
+                    normal_txs_from_x[i['to']].append([i['timeStamp'], i['hash']])
                 else:
-                    txs_from_x[i['to']] = [[i['timeStamp'], i['hash']]]
+                    normal_txs_from_x[i['to']] = [[i['timeStamp'], i['hash']]]
 
             if i['to'] == address:
-                if i['from'] in txs_to_x:
-                    txs_to_x[i['from']].append([i['timeStamp'], i['hash']])
+                if i['from'] in normal_txs_to_x:
+                    normal_txs_to_x[i['from']].append([i['timeStamp'], i['hash']])
                 else:
-                    txs_to_x[i['from']] = [[i['timeStamp'], i['hash']]]
+                    normal_txs_to_x[i['from']] = [[i['timeStamp'], i['hash']]]
 
-        return txs_from_x, txs_to_x
+        return normal_txs_from_x, normal_txs_to_x
 
     @staticmethod
     def get_names(search_adress):
@@ -124,10 +125,4 @@ class AllOutcomingTxs(DiscoverableTransform):
 
 
 if __name__ == "__main__":
-    for i in AllOutcomingTxs.get_address_transactions('0x7e46480d8e28c1d6c55be1b782084dd2c902f99f'):
-        for tx in i:
-            name = AllOutcomingTxs.get_names(tx.lower())
-            # if name:
-            #     print(name)
-            # else:
-            #     print(tx)
+    pass
