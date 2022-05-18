@@ -52,7 +52,7 @@ class AllOutcomingTxs(DiscoverableTransform):
                     entity.setLinkThickness(3)
 
         address = request.Value
-        link_normal_txs = 'https://api.etherscan.io/api?module=account&action=tokentx&address={address}&page=all&offset=100&startblock=0&endblock=27025780&sort=asc&apikey='
+        link_normal_txs = f'https://api.etherscan.io/api?module=account&action=tokentx&address={address}&page=all&offset=100&startblock=0&endblock=27025780&sort=asc&apikey='
         normal_txs_from_x, normal_txs_to_x = cls.get_address_transactions(address, link_normal_txs)
 
         if normal_txs_from_x:
@@ -74,6 +74,7 @@ class AllOutcomingTxs(DiscoverableTransform):
         normal_txs_from_x = {}
         normal_txs_to_x = {}
         for i in result:
+            print(i)
             if i['from'] == address:
                 if i['to'] in normal_txs_from_x:
                     normal_txs_from_x[i['to']].append([i['timeStamp'], i['hash']])
@@ -125,4 +126,4 @@ class AllOutcomingTxs(DiscoverableTransform):
 
 
 if __name__ == "__main__":
-    pass
+    AllOutcomingTxs.get_address_transactions('0x259838b05d61717e37fc7b6bf0758d25644ee930', 'https://api.etherscan.io/api?module=account&action=tokentx&address=0x259838b05d61717e37fc7b6bf0758d25644ee930&page=all&offset=100&startblock=0&endblock=27025780&sort=asc&apikey=')
