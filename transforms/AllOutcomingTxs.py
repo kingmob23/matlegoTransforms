@@ -32,7 +32,7 @@ class AllOutcomingTxs(DiscoverableTransform):
                 )
                 counter += 1
 
-        def add_txs(txs, color):
+        def add_txs(txs, color, style):
             for tx in txs:
                 name = cls.get_names(tx.strip().lower())
                 if name:
@@ -46,23 +46,43 @@ class AllOutcomingTxs(DiscoverableTransform):
 
                 else:
                     entity = response.addEntity(Person, tx)
-                    counter = 0
                     add_time_n_hash(entity, txs[tx])
                     entity.setLinkColor(color)
                     entity.setLinkThickness(3)
+                    entity.setLinkStyle(style)
 
         address = request.Value
-        link_normal_txs = f'https://api.etherscan.io/api?module=account&action=tokentx&address={address}&page=all&offset=100&startblock=0&endblock=27025780&sort=asc&apikey='
+
+        link_normal_txs = f'https://api.etherscan.io/api?module=account&action=tokentx&address={address}' \
+                          f'&page=all&offset=100&startblock=0&endblock=27025780&sort=asc&apikey='
         normal_txs_from_x, normal_txs_to_x = cls.get_address_transactions(address, link_normal_txs)
 
+        link_internal_txs = f'https://api.etherscan.io/api?module=account&action=txlistinternal&address={address}' \
+                            f'&endblock=2702578&page=all&offset=10&sort=asc&apikey='
+        internal_txs_of_x = cls.get_address_transactions(address, link_internal_txs)
+
+        link_ERC20 = f'https://api.etherscan.io/api?module=account&action=tokentx&address={address}' \
+                     f'&page=all&offset=100&startblock=0&endblock=27025780&sort=asc&apikey='
+        ERC20_txs_from_x, ERC20_txs_to_x = cls.get_address_transactions(address, link_ERC20)
+
         if normal_txs_from_x:
-            add_txs(normal_txs_from_x, '#318a86')
+            add_txs(normal_txs_from_x, '#318a86', 'Solid')
         if normal_txs_to_x:
-            add_txs(normal_txs_to_x, '#ab2424')
+            add_txs(normal_txs_to_x, '#ab2424', 'Solid')
+
+        if internal_txs_of_x:
+            pass
+
+        if ERC20_txs_from_x:
+            add_txs(ERC20_txs_from_x, '#f51c24', 'Dashed')
+        if ERC20_txs_to_x:
+            add_txs(ERC20_txs_to_x, '#00a2e8', 'Dashed')
+
+
 
     @staticmethod
     def get_address_transactions(raw_address, link):
-        api_key = ''
+        api_key = '9CA95D75FTTENE2CDY24J6WXXC1IZT8W4N'
         address = raw_address.lower()
 
         response_API = requests.get(link + api_key)
@@ -71,22 +91,25 @@ class AllOutcomingTxs(DiscoverableTransform):
         parse_json = json.loads(data)
         result = parse_json['result']
 
-        normal_txs_from_x = {}
-        normal_txs_to_x = {}
-        for i in result:
-            if i['from'] == address:
-                if i['to'] in normal_txs_from_x:
-                    normal_txs_from_x[i['to']].append([i['timeStamp'], i['hash']])
-                else:
-                    normal_txs_from_x[i['to']] = [[i['timeStamp'], i['hash']]]
+        message = parse_json['message']
+        if message != "No transactions found":
 
-            if i['to'] == address:
-                if i['from'] in normal_txs_to_x:
-                    normal_txs_to_x[i['from']].append([i['timeStamp'], i['hash']])
-                else:
-                    normal_txs_to_x[i['from']] = [[i['timeStamp'], i['hash']]]
+            normal_txs_from_x = {}
+            normal_txs_to_x = {}
+            for i in result:
+                if i['from'] == address:
+                    if i['to'] in normal_txs_from_x:
+                        normal_txs_from_x[i['to']].append([i['timeStamp'], i['hash']])
+                    else:
+                        normal_txs_from_x[i['to']] = [[i['timeStamp'], i['hash']]]
 
-        return normal_txs_from_x, normal_txs_to_x
+                if i['to'] == address:
+                    if i['from'] in normal_txs_to_x:
+                        normal_txs_to_x[i['from']].append([i['timeStamp'], i['hash']])
+                    else:
+                        normal_txs_to_x[i['from']] = [[i['timeStamp'], i['hash']]]
+
+            return normal_txs_from_x, normal_txs_to_x
 
     @staticmethod
     def get_names(search_adress):
