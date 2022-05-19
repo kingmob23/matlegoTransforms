@@ -16,19 +16,32 @@ class AllOutcomingTxs(DiscoverableTransform):
     @classmethod
     def create_entities(cls, request, response):
 
-        def add_time_n_hash(some_entity, properties_list):
+        def add_properties(some_entity, properties_list):
             counter = 0
             for i in properties_list:
-                date = datetime.fromtimestamp(int(i[0]))
+                some_entity.addProperty(
+                    'type' + str(counter),
+                    displayName='type' + str(counter),
+                    value=f'{i[0]}'
+                )
+
+                some_entity.addProperty(
+                    'direction' + str(counter),
+                    displayName='direction' + str(counter),
+                    value=f'{i[1]}'
+                )
+                
+                date = datetime.fromtimestamp(int(i[2]))
                 some_entity.addProperty(
                     'time' + str(counter),
                     displayName='time' + str(counter),
                     value=f'{date}'
                 )
+
                 some_entity.addProperty(
                     'hash' + str(counter),
                     displayName='hash' + str(counter),
-                    value=f'{i[1]}'
+                    value=f'{i[3]}'
                 )
                 counter += 1
 
@@ -42,11 +55,11 @@ class AllOutcomingTxs(DiscoverableTransform):
                         displayName='address',
                         value=f'{tx}'
                     )
-                    add_time_n_hash(entity, txs[tx])
+                    add_properties(entity, txs[tx])
 
                 else:
                     entity = response.addEntity(Person, tx)
-                    add_time_n_hash(entity, txs[tx])
+                    add_properties(entity, txs[tx])
                     entity.setLinkColor(color)
                     entity.setLinkThickness(3)
                     entity.setLinkStyle(style)
