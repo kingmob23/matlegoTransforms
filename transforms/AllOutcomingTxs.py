@@ -140,29 +140,30 @@ class AllOutcomingTxs(DiscoverableTransform):
         if len(info) == 3:
             received_address = info[1].split(' ')[1].lower()
             if search_adress == received_address:
-                name = info[0]
+                name = soup.find('span')
+                if name:
+                    with open('adress_to_names.csv', 'a') as db:
+                        writer = csv.writer(db)
+                        eman = ' ' + name
+                        line = [search_adress, eman]
+                        writer.writerow(line)
 
-                with open('adress_to_names.csv', 'a') as db:
-                    writer = csv.writer(db)
-                    eman = ' ' + name
-                    line = [search_adress, eman]
-                    writer.writerow(line)
-
-                return name
+                    return name
 
 
 if __name__ == "__main__":
-    address = '0xb3065fE2125C413E973829108F23E872e1DB9A6b'
-    api_key = '9CA95D75FTTENE2CDY24J6WXXC1IZT8W4N'
-
-    link_normal_txs = f'https://api.etherscan.io/api?module=account&action=tokentx&address={address}' \
-                      f'&page=all&offset=100&startblock=0&endblock=27025780&sort=asc&apikey='
-    normal_txs = \
-        AllOutcomingTxs.get_address_transactions(address, link_normal_txs + api_key, 'normal')
-
-    link_ERC20 = f'https://api.etherscan.io/api?module=account&action=tokentx&address={address}' \
-                 f'&page=all&offset=100&startblock=0&endblock=27025780&sort=asc&apikey='
-    all_txs = \
-        AllOutcomingTxs.get_address_transactions(address, link_ERC20 + api_key, 'ERC20', normal_txs)
-
-    print(all_txs)
+    # address = '0xb3065fE2125C413E973829108F23E872e1DB9A6b'
+    # api_key = '9CA95D75FTTENE2CDY24J6WXXC1IZT8W4N'
+    #
+    # link_normal_txs = f'https://api.etherscan.io/api?module=account&action=tokentx&address={address}' \
+    #                   f'&page=all&offset=100&startblock=0&endblock=27025780&sort=asc&apikey='
+    # normal_txs = \
+    #     AllOutcomingTxs.get_address_transactions(address, link_normal_txs + api_key, 'normal')
+    #
+    # link_ERC20 = f'https://api.etherscan.io/api?module=account&action=tokentx&address={address}' \
+    #              f'&page=all&offset=100&startblock=0&endblock=27025780&sort=asc&apikey='
+    # all_txs = \
+    #     AllOutcomingTxs.get_address_transactions(address, link_ERC20 + api_key, 'ERC20', normal_txs)
+    #
+    # print(all_txs)
+    print(AllOutcomingTxs.get_names('0xd90e2f925DA726b50C4Ed8D0Fb90Ad053324F31b'.strip().lower()))
