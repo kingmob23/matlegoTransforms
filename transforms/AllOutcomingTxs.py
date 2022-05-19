@@ -119,7 +119,7 @@ class AllOutcomingTxs(DiscoverableTransform):
     def get_names(search_adress):
         with open("adress_to_names.csv") as f:
             for ln in f.readlines():
-                if len(ln.split(",")) > 1:
+                if len(ln.split(",")) == 2:
                     adress, nname = ln.split(",")
                     if adress.strip().lower() == search_adress:
                         matching_name = nname.strip()
