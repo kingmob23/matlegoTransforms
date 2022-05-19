@@ -78,8 +78,12 @@ class AllOutcomingTxs(DiscoverableTransform):
                      f'&page=all&offset=100&startblock=0&endblock=27025780&sort=asc&apikey='
         normal_n_ERC20_txs = cls.get_address_transactions(address, link_ERC20, 'ERC20', normal_txs)
 
+        link_ERC721 = f'https://api.etherscan.io/api?module=account&action=tokennfttx&address={address}' \
+                      f'&page=all&offset=100&startblock=0&endblock=27025780&sort=asc&apikey='
+        all_txs = cls.get_address_transactions(address, link_ERC721, 'ERC721', normal_n_ERC20_txs)
+
         if normal_n_ERC20_txs:
-            add_txs(normal_n_ERC20_txs, '#040404', 0)
+            add_txs(all_txs, '#040404', 0)
 
     @staticmethod
     def get_address_transactions(raw_address, link, txs_type, result_dict=None):
