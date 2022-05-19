@@ -21,26 +21,26 @@ class AllOutcomingTxs(DiscoverableTransform):
             for i in properties_list:
                 some_entity.addProperty(
                     'type' + str(counter),
-                    displayName='type' + str(counter),
+                    displayName='type ' + str(counter),
                     value=f'{i[0]}'
                 )
 
                 some_entity.addProperty(
                     'direction' + str(counter),
-                    displayName='direction' + str(counter),
+                    displayName='direction ' + str(counter),
                     value=f'{i[1]}'
                 )
                 
                 date = datetime.fromtimestamp(int(i[2]))
                 some_entity.addProperty(
                     'time' + str(counter),
-                    displayName='time' + str(counter),
+                    displayName='time ' + str(counter),
                     value=f'{date}'
                 )
 
                 some_entity.addProperty(
                     'hash' + str(counter),
-                    displayName='hash' + str(counter),
+                    displayName='hash ' + str(counter),
                     value=f'{i[3]}'
                 )
                 counter += 1
