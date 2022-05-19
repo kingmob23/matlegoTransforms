@@ -140,7 +140,7 @@ class AllOutcomingTxs(DiscoverableTransform):
         if len(info) == 3:
             received_address = info[1].split(' ')[1].lower()
             if search_adress == received_address:
-                name = soup.find('span').string
+                name = soup.find('sapn', title="").string
                 if name:
                     with open('adress_to_names.csv', 'a') as db:
                         writer = csv.writer(db)
