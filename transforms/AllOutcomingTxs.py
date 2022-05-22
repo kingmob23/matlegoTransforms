@@ -88,7 +88,7 @@ class AllOutcomingTxs(DiscoverableTransform):
     @staticmethod
     def get_address_transactions(raw_address, link, txs_type, result_dict=None):
         api_key = '9CA95D75FTTENE2CDY24J6WXXC1IZT8W4N'
-        address = raw_address.lower()
+        address = raw_address.lower().strip()
 
         response_API = requests.get(link + api_key)
 
@@ -157,18 +157,19 @@ class AllOutcomingTxs(DiscoverableTransform):
 
 
 if __name__ == "__main__":
-    # address = '0xb3065fE2125C413E973829108F23E872e1DB9A6b'
-    # api_key = '9CA95D75FTTENE2CDY24J6WXXC1IZT8W4N'
-    #
-    # link_normal_txs = f'https://api.etherscan.io/api?module=account&action=tokentx&address={address}' \
-    #                   f'&page=all&offset=100&startblock=0&endblock=27025780&sort=asc&apikey='
-    # normal_txs = \
-    #     AllOutcomingTxs.get_address_transactions(address, link_normal_txs + api_key, 'normal')
-    #
-    # link_ERC20 = f'https://api.etherscan.io/api?module=account&action=tokentx&address={address}' \
-    #              f'&page=all&offset=100&startblock=0&endblock=27025780&sort=asc&apikey='
-    # all_txs = \
-    #     AllOutcomingTxs.get_address_transactions(address, link_ERC20 + api_key, 'ERC20', normal_txs)
-    #
-    # print(all_txs)
-    print(AllOutcomingTxs.get_names('0xd90e2f925DA726b50C4Ed8D0Fb90Ad053324F31b'.strip().lower()))
+    address = '0xb3065fE2125C413E973829108F23E872e1DB9A6b'
+    api_key = '9CA95D75FTTENE2CDY24J6WXXC1IZT8W4N'
+
+    link_normal_txs = f'https://api.etherscan.io/api?module=account&action=tokentx&address={address}' \
+                      f'&page=all&offset=100&startblock=0&endblock=27025780&sort=asc&apikey='
+    normal_txs = \
+        AllOutcomingTxs.get_address_transactions(address, link_normal_txs + api_key, 'normal')
+
+    link_ERC20 = f'https://api.etherscan.io/api?module=account&action=tokentx&address={address}' \
+                 f'&page=all&offset=100&startblock=0&endblock=27025780&sort=asc&apikey='
+    all_txs = \
+        AllOutcomingTxs.get_address_transactions(address, link_ERC20 + api_key, 'ERC20', normal_txs)
+
+    print(all_txs)
+
+    # print(AllOutcomingTxs.get_names('0xd90e2f925DA726b50C4Ed8D0Fb90Ad053324F31b'))
