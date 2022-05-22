@@ -10,7 +10,7 @@ import csv
 
 class AllOutcomingTxs(DiscoverableTransform):
     """
-    Lookup all outcoming txs from address.
+    Lookup for all txs of address.
     """
 
     @classmethod
@@ -96,13 +96,13 @@ class AllOutcomingTxs(DiscoverableTransform):
         parse_json = json.loads(data)
         result = parse_json['result']
 
+        if result_dict:
+            normal_txs = result_dict
+        else:
+            normal_txs = {}
+
         message = parse_json['message']
         if message != "No transactions found":
-
-            if result_dict:
-                normal_txs = result_dict
-            else:
-                normal_txs = {}
 
             for i in result:
                 if i['from'] == address:
@@ -117,7 +117,7 @@ class AllOutcomingTxs(DiscoverableTransform):
                     else:
                         normal_txs[i['from']] = [[txs_type, 'sent', i['timeStamp'], i['hash']]]
 
-            return normal_txs
+        return normal_txs
 
     @staticmethod
     def get_names(search_adress):
