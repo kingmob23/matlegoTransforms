@@ -156,7 +156,6 @@ class AllOutcomingTxs(DiscoverableTransform):
 
                         return name
         except AttributeError:
-            response.addUIMessage('cant parse', messageType=UIM_PARTIAL)
             return None
 
 
