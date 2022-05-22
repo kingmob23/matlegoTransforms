@@ -139,21 +139,25 @@ class AllOutcomingTxs(DiscoverableTransform):
         data = response.text
 
         soup = BeautifulSoup(data, 'html.parser')
-        info = list(map(str.strip, soup.find('title').string.strip().split('|')))
+        try:
+            info = list(map(str.strip, soup.find('title').string.strip().split('|')))
 
-        if len(info) == 3:
-            received_address = info[1].split(' ')[1].lower()
-            if search_adress == received_address:
-                name = soup.find('sapn', title="")
-                if name:
-                    name = name.string
-                    with open('adress_to_names.csv', 'a') as db:
-                        writer = csv.writer(db)
-                        eman = ' ' + name
-                        line = [search_adress, eman]
-                        writer.writerow(line)
+            if len(info) == 3:
+                received_address = info[1].split(' ')[1].lower()
+                if search_adress == received_address:
+                    name = soup.find('sapn', title="")
+                    if name:
+                        name = name.string
+                        with open('adress_to_names.csv', 'a') as db:
+                            writer = csv.writer(db)
+                            eman = ' ' + name
+                            line = [search_adress, eman]
+                            writer.writerow(line)
 
-                    return name
+                        return name
+        except AttributeError:
+            response.addUIMessage('cant parse', messageType=UIM_PARTIAL)
+            return None
 
 
 if __name__ == "__main__":
