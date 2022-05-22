@@ -82,7 +82,7 @@ class AllOutcomingTxs(DiscoverableTransform):
                       f'&page=all&offset=100&startblock=0&endblock=27025780&sort=asc&apikey='
         all_txs = cls.get_address_transactions(address, link_ERC721, 'ERC721', normal_n_ERC20_txs)
 
-        if normal_n_ERC20_txs:
+        if all_txs:
             add_txs(all_txs, '#040404', 0)
 
     @staticmethod
