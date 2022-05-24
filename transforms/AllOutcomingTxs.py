@@ -140,21 +140,13 @@ class AllOutcomingTxs(DiscoverableTransform):
 
         soup = BeautifulSoup(data, 'html.parser')
         try:
-            info = list(map(str.strip, soup.find('title').string.strip().split('|')))
-
-            if len(info) == 3:
-                received_address = info[1].split(' ')[1].lower()
-                if search_adress == received_address:
-                    name = soup.find('sapn', title="")
-                    if name:
-                        name = name.string
-                        with open('adress_to_names.csv', 'a') as db:
-                            writer = csv.writer(db)
-                            eman = ' ' + name
-                            line = [search_adress, eman]
-                            writer.writerow(line)
-
-                        return name
+            name = soup.find(class_="u-label u-label--secondary text-dark font-size-1 rounded py-1 px-3").span.string
+            with open('adress_to_names.csv', 'a') as db:
+                writer = csv.writer(db)
+                eman = ' ' + name
+                line = [search_adress, eman]
+                writer.writerow(line)
+            return name
         except AttributeError:
             return None
 
