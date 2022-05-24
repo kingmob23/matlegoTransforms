@@ -140,13 +140,15 @@ class AllOutcomingTxs(DiscoverableTransform):
 
         soup = BeautifulSoup(data, 'html.parser')
         try:
-            name = soup.find(class_="u-label u-label--secondary text-dark font-size-1 rounded py-1 px-3").span.string
-            with open('adress_to_names.csv', 'a') as db:
-                writer = csv.writer(db)
-                eman = ' ' + name
-                line = [search_adress, eman]
-                writer.writerow(line)
-            return name
+            if soup.find('h2', class_="card-header-title").string == 'Contract Overview':
+                name = soup.find(
+                    class_="u-label u-label--secondary text-dark font-size-1 rounded py-1 px-3").span.string
+                with open('adress_to_names.csv', 'a') as db:
+                    writer = csv.writer(db)
+                    eman = ' ' + name
+                    line = [search_adress, eman]
+                    writer.writerow(line)
+                return name
         except AttributeError:
             return None
 
